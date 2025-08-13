@@ -1,0 +1,52 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.inputContainer.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: var(--reduced-text-size);
+  font-weight: 400;
+  color: #000000;
+  line-height: 100%;
+}
+
+.input {
+  padding: 8px 12px;
+  border: 1px solid var(--outline);
+  border-radius: var(--input-radius);
+  font-size: var(--reduced-text-size);
+  line-height: var(--reduced-text-size);
+  transition: 0.3s all;
+  outline: none;
+  height: 14px;
+}
+
+.input:focus {
+  border-color: var(--primary);
+}
+
+.input.error {
+  border-color: #ef4444;
+}
+
+.input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.input[type='number']::-webkit-outer-spin-button,
+.input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: var(--reduced-text-size);
+  margin-top: 4px;
+}

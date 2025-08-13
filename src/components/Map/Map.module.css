@@ -1,0 +1,11 @@
+.map {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+/* Скрываем элементы управления OpenLayers */
+:global(.ol-attribution),
+:global(.ol-zoom) {
+  display: none !important;
+}

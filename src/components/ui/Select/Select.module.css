@@ -1,0 +1,57 @@
+.selectContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  position: relative;
+  width: 100%;
+}
+
+.label {
+  font-size: var(--reduced-text-size);
+  font-weight: 400;
+  color: #000000;
+  line-height: 100%;
+}
+
+.selectWrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.select {
+  padding: 8px 12px;
+  padding-right: 32px; /* Оставляем место для иконки */
+  border: 1px solid var(--outline);
+  border-radius: var(--input-radius);
+  font-size: var(--reduced-text-size);
+  line-height: var(--reduced-text-size);
+  transition: 0.3s all;
+  outline: none;
+  appearance: none; /* Убираем стандартный вид */
+  -webkit-appearance: none; /* Для Safari */
+  -moz-appearance: none; /* Для Firefox */
+  width: 100%;
+  background-color: white;
+  cursor: pointer;
+}
+
+.select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.chevron {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.select:focus + .chevron {
+  transform: translateY(-50%) rotate(180deg);
+}

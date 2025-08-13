@@ -1,0 +1,51 @@
+.button {
+  /* Common styles for all buttons */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+
+.secondary {
+  padding: 8px 16px;
+  border: 1px solid var(--outline);
+  border-radius: var(--input-radius);
+  background: transparent;
+  font-size: var(--reduced-text-size);
+  line-height: var(--reduced-text-size);
+}
+
+
+.primary {
+  padding: 8px 16px;
+  background: var(--accent-bg);
+  border-radius: var(--input-radius);
+  color: var(--message-fg);
+  font-size: var(--reduced-text-size);
+  line-height: var(--reduced-text-size);
+  border: none;
+}
+
+.map {
+  padding: 8px 16px;
+  gap: 16px;
+  background: var(--omui-bg);
+  box-shadow: var(--omui-blur-shadow);
+  font-size: var(--regular-text-size);
+  backdrop-filter: blur(2px);
+  border-radius: var(--omui-button-radius);
+  border: none;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
