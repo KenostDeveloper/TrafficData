@@ -18,6 +18,7 @@ interface ModalProps {
   children: ReactNode;
   width?: string;
   height?: string;
+  padding?: string;
   position?: ModalPosition;
 }
 
@@ -29,6 +30,7 @@ export const Modal = ({
   width = '500px',
   height = 'auto',
   position = 'center',
+  padding = '16px'
 }: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
@@ -48,7 +50,7 @@ export const Modal = ({
       <div className={styles.modalContentWrapper}>
         <div
           className={`${styles.modalContent} ${styles[position]}`}
-          style={{ width, height }}
+          style={{ width, height, padding }}
         >
           <div className={styles.modalHeader}>
             <h3>{title}</h3>

@@ -1,0 +1,49 @@
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+  opacity: 1;
+  background: #18171C;
+  color: #E8E8E3;
+}
+
+.notification.exit {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.closeButton:hover {
+  opacity: 1;
+}

@@ -3,24 +3,16 @@ import styles from './ProjectForm.module.css';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
+import type { ProjectFormValues } from '../../types';
 
-type ProjectFormValues = {
-  name: string;
-  author: string;
-  imageUrl: string;
-  status: 'verified' | 'pending' | 'unverified';
-  rating: number;
-  coordinates: [number, number];
-};
-
-type ProjectFormProps = {
+interface ProjectFormProps {
   project: ProjectFormValues;
   onSubmit: () => void;
   onCancel: () => void;
-  onChange: (field: keyof ProjectFormValues, value: string | number) => void;
+  onChange: (field: string, value: string | number) => void;
   isSubmitting: boolean;
   isValid: boolean;
-};
+}
 
 export function ProjectForm({
   project,
@@ -64,7 +56,7 @@ export function ProjectForm({
         <Input
           label="Рейтинг"
           type="number"
-          value={project.rating.toString()}
+          value={project.rating.toString()} // rating теперь точно number
           onChange={(e) => onChange('rating', parseInt(e.target.value) || 0)}
           min="0"
           max="100"

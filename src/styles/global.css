@@ -9,6 +9,7 @@
     --accent-bg: #29303D;
     --omui-bg: #FFFFFFD9;
     --primary: #17181C;
+    --secondary: #494A50;
     
     --message-fg: #E8E8E3;
     --outline: #B2B2B2;
@@ -22,4 +23,5 @@
     --input-radius: 4px;
     --omui-button-radius: 999px;
     --omui-panel-radius: 12px;
+
 }

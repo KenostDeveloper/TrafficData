@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -21,11 +21,15 @@ interface MapComponentProps {
   selectedPoint: [number, number] | null;
 }
 
-export const MapComponent = ({ 
+export interface MapHandle {
+  getView: () => View | undefined;
+}
+
+export const MapComponent = forwardRef<MapHandle, MapComponentProps>(({ 
   projects, 
   onMapClick,
   selectedPoint
-}: MapComponentProps) => {
+}, ref) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<Map | null>(null);
   const vectorSource = useRef(new VectorSource());
@@ -35,6 +39,7 @@ export const MapComponent = ({
     distance: 40
   }));
 
+  // Стиль для обычных маркеров
   const markerStyle = new Style({
     image: new Icon({
       src: markerIcon,
@@ -43,15 +48,17 @@ export const MapComponent = ({
     })
   });
 
+  // Стиль для выбранного маркера (при создании проекта)
   const selectionStyle = new Style({
     image: new Icon({
       src: markerIcon,
-      scale: 1,
+      scale: 1.2,
       anchor: [0.5, 1],
-      color: '#00eeffff'
+      color: '#4285F4'
     })
   });
 
+  // Стиль для кластеров
   const clusterStyle = (size: number) => {
     return new Style({
       image: new Circle({
@@ -70,6 +77,7 @@ export const MapComponent = ({
     });
   };
 
+  // Инициализация карты
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
@@ -87,7 +95,8 @@ export const MapComponent = ({
           }
         }),
         new VectorLayer({
-          source: selectionSource.current
+          source: selectionSource.current,
+          style: selectionStyle
         })
       ],
       view: new View({
@@ -96,6 +105,7 @@ export const MapComponent = ({
       })
     });
 
+    // Обработчик клика по карте
     const clickHandler = (e: any) => {
       if (onMapClick) {
         const coords = toLonLat(e.coordinate);
@@ -104,7 +114,6 @@ export const MapComponent = ({
     };
 
     map.on('click', clickHandler);
-
     mapInstance.current = map;
 
     return () => {
@@ -114,6 +123,7 @@ export const MapComponent = ({
     };
   }, []);
 
+  // Обновление маркеров при изменении проектов
   useEffect(() => {
     vectorSource.current.clear();
 
@@ -121,7 +131,8 @@ export const MapComponent = ({
       try {
         const marker = new Feature({
           geometry: new Point(fromLonLat(project.coordinates)),
-          name: project.name
+          name: project.name,
+          projectId: project.id
         });
         vectorSource.current.addFeature(marker);
       } catch (e) {
@@ -129,6 +140,7 @@ export const MapComponent = ({
       }
     });
 
+    // Автоматическое приближение при наличии проектов
     if (projects.length > 0 && mapInstance.current) {
       setTimeout(() => {
         const extent = vectorSource.current.getExtent();
@@ -142,6 +154,7 @@ export const MapComponent = ({
     }
   }, [projects]);
 
+  // Обновление выбранной точки
   useEffect(() => {
     selectionSource.current.clear();
     
@@ -149,10 +162,16 @@ export const MapComponent = ({
       const marker = new Feature({
         geometry: new Point(fromLonLat(selectedPoint))
       });
-      marker.setStyle(selectionStyle);
       selectionSource.current.addFeature(marker);
     }
   }, [selectedPoint]);
 
+  // Экспорт методов карты через ref
+  useImperativeHandle(ref, () => ({
+    getView: () => mapInstance.current?.getView()
+  }));
+
   return <div ref={mapRef} className={styles.map} />;
-};
+});
+
+MapComponent.displayName = 'MapComponent';

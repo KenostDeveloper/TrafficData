@@ -1,0 +1,131 @@
+.card{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.imageCard{
+    width: 120px;
+    height: 100px;
+    background: radial-gradient(75.89% 122.93% at 9.82% 26.14%, rgba(231, 216, 198, 0.5) 0%, rgba(183, 159, 131, 0.5) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+    border-radius: var(--input-radius);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 6px;
+    line-height: 8px;
+}
+
+.image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cardContent{
+    width: calc(100% - 130px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cardTitle{
+    font-size: var(--regular-text-size);
+    line-height: 24px;
+    color: var(--primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cardInfo{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.cardInfoText{
+    display: flex;
+    gap: 10px;
+}
+
+.cardDescription{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: var(--reduced-text-size);
+    line-height: var(--reduced-text-size);
+}
+
+.cardRating{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--reduced-text-size);
+    line-height: var(--reduced-text-size);
+    color: var(--primary);
+}
+
+.cardDate{
+    font-size: var(--reduced-text-size);
+    line-height: var(--reduced-text-size);
+    color: var(--primary);
+}
+
+.dot{
+    color: var(--secondary);
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.cardEvents{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.cardIcon {
+    stroke: var(--secondary);
+    cursor: pointer;
+    transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.cardIcon:hover {
+    transform: scale(1.1);
+}
+
+.starClicked {
+    transform: scale(0.9);
+    fill: #FFD700; /* Золотой цвет при нажатии */
+    stroke: #FFA500; /* Оранжевая обводка при нажатии */
+}
+
+.cardIcon {
+    cursor: pointer;
+    transition: transform 0.2s ease, fill 0.2s ease, color 0.2s ease;
+}
+
+.cardIcon:hover {
+    transform: scale(1.1);
+}
+
+.starClicked {
+    transform: scale(0.9);
+    fill: #FFD700;
+    stroke: #FFA500;
+}
+
+.deleteClicked {
+    transform: scale(0.9);
+    color: #ff0000;
+}
+
+.mapPinClicked {
+    transform: scale(0.9);
+    color: #4285F4;
+}

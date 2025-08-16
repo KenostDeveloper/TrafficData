@@ -1,0 +1,36 @@
+.radioButton{
+  border-radius: var(--omui-button-radius);
+  display: flex;
+  font-size: var(--reduced-text-size);
+  line-height: var(--regular-text-size);
+  gap: 10px;
+  align-items: center;
+  padding: 4px 12px;
+  box-sizing: border-box;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.verified {
+  background: #D4F2D6;
+  border: 1px solid #2D6E2F;
+  color: #2D6E2F;
+}
+
+.pending {
+  background: #ECF1AE;
+  border: 1px solid #545422;
+  color: #545422;
+}
+
+.unverified {
+  background: #F2F2F2;
+  border: 1px solid #454B54;
+  color: #454B54;
+}
+
+.disabled{
+  background: #C9CACF;
+  border: 1px solid #6D6F78;
+  color: #6D6F78;
+}

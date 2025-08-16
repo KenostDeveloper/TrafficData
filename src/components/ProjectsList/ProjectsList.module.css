@@ -1,0 +1,23 @@
+.list{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.list::-webkit-scrollbar {
+  width: 0;
+}
+
+.filters{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 28px;
+    margin-top: 22px;
+}
+
+.list p{
+    text-align: center;
+}

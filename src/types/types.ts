@@ -1,6 +1,7 @@
 // types.ts
 export type ProjectStatus = 'verified' | 'pending' | 'unverified';
 
+
 export interface Project {
   id: string;
   name: string;
@@ -15,9 +16,11 @@ export interface ProjectFormValues {
   name: string;
   author: string;
   imageUrl: string;
-  status: ProjectStatus;
-  rating?: number;
-}
+  status: 'verified' | 'pending' | 'unverified';
+  rating: number; // Убедимся, что rating обязательный
+  coordinates: [number, number];
+  createdAt?: Date; // Добавим createdAt как опциональное поле
+};
 
 export interface MapComponentProps {
   onMapClick?: (coords: [number, number]) => void;

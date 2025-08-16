@@ -1,22 +1,27 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { MapComponent } from './components/Map';
 import styles from './App.module.css';
 import { Modal } from './components/ui/Modal';
 import { LOCAL_STORAGE_KEY } from './consts';
 import { ProjectForm } from './components/ProjectForm';
 import { ProjectControls } from './components/ProjectControls';
-import type { Project } from './types';
+import type { Project, ProjectFormValues } from './types';
+import { ProjectsList } from './components/ProjectsList';
+import { fromLonLat } from 'ol/proj';
+import { useNotification } from './context/NotificationContext';
 
-const INITIAL_PROJECT_STATE = {
+const INITIAL_PROJECT_STATE: ProjectFormValues = {
   name: '',
   author: '',
   imageUrl: '',
-  status: 'unverified' as const,
+  status: 'unverified',
   rating: 0,
-  coordinates: [56.227431, 58.008653] as [number, number]
+  coordinates: [56.227431, 58.008653],
 };
 
 export default function App() {
+  const { showNotification } = useNotification();
+  
   const [projects, setProjects] = useState<Project[]>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
@@ -25,15 +30,51 @@ export default function App() {
   const [openAddProject, setOpenProject] = useState(false);
   const [openListProjects, setOpenListProjects] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState<[number, number] | null>(null);
-  const [newProject, setNewProject] = useState(INITIAL_PROJECT_STATE);
+  const [newProject, setNewProject] = useState<ProjectFormValues>({
+    ...INITIAL_PROJECT_STATE,
+    createdAt: new Date()
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mapRef = useRef<any>(null);
 
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(projects));
   }, [projects]);
 
   const handleAddProject = useCallback(() => {
-    if (!selectedPoint || !newProject.name || !newProject.author) return;
+    // Проверка обязательных полей
+    if (!newProject.name.trim()) {
+      showNotification({
+        message: 'Введите название проекта',
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!newProject.author.trim()) {
+      showNotification({
+        message: 'Введите автора проекта',
+        duration: 3000
+      });
+      return;
+    }
+
+    if (!selectedPoint) {
+      showNotification({
+        message: 'Выберите местоположение на карте',
+        duration: 3000
+      });
+      return;
+    }
+
+    // Проверка URL изображения, если оно введено
+    if (newProject.imageUrl && !/^https?:\/\/.+\..+/.test(newProject.imageUrl)) {
+      showNotification({
+        message: 'Введите корректный URL изображения',
+        duration: 3000
+      });
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -49,12 +90,21 @@ export default function App() {
       setOpenProject(false);
       setSelectedPoint(null);
       setNewProject(INITIAL_PROJECT_STATE);
+      
+      showNotification({
+        message: 'Проект успешно добавлен!',
+        duration: 5000
+      });
     } catch (error) {
       console.error('Error adding project:', error);
+      showNotification({
+        message: 'Произошла ошибка при добавлении проекта',
+        duration: 5000
+      });
     } finally {
       setIsSubmitting(false);
     }
-  }, [newProject, selectedPoint]);
+  }, [newProject, selectedPoint, showNotification]);
 
   const handleMapClick = useCallback((coords: [number, number]) => {
     setSelectedPoint(coords);
@@ -62,7 +112,7 @@ export default function App() {
       ...prev,
       coordinates: coords
     }));
-  }, []);
+  }, [showNotification]);
 
   const handleProjectChange = useCallback((field: string, value: string | number) => {
     setNewProject(prev => ({
@@ -71,11 +121,32 @@ export default function App() {
     }));
   }, []);
 
-  useEffect(() => {
-    if (openAddProject) {
-      setSelectedPoint(null);
+  const handleFocusOnMap = useCallback((coordinates: [number, number]) => {
+    if (mapRef.current) {
+      mapRef.current.getView().animate({
+        center: fromLonLat(coordinates),
+        zoom: 17,
+        duration: 500
+      });
     }
-  }, [openAddProject]);
+  }, [showNotification]);
+
+  const handleDeleteProject = useCallback((projectId: string) => {
+    setProjects(prev => prev.filter(project => project.id !== projectId));
+    showNotification({
+      message: 'Проект удален',
+      duration: 3000
+    });
+  }, [showNotification]);
+
+  const handleRatingIncrease = useCallback((projectId: string) => {
+    setProjects(prev => prev.map(project => {
+      if (project.id === projectId && project.status === 'verified') {
+        return { ...project, rating: (project.rating || 0) + 1 };
+      }
+      return project;
+    }));
+  }, [showNotification]);
 
   const isFormValid = Boolean(
     newProject.name.trim() && 
@@ -86,6 +157,7 @@ export default function App() {
   return (
     <div className={styles.appContainer}>
       <MapComponent
+        ref={mapRef}
         projects={projects}
         onMapClick={handleMapClick}
         selectedPoint={openAddProject ? selectedPoint : null}
@@ -116,9 +188,15 @@ export default function App() {
           width="600px"
           height="100vh"
           position="top-right"
+          padding='24px'
         >
-          {/* Здесь можно добавить компонент ProjectsList в будущем */}
-          <div>Список проектов будет здесь</div>
+          <ProjectsList 
+            projects={projects}
+            setProjects={setProjects}
+            onFocusOnMap={handleFocusOnMap}
+            onDelete={handleDeleteProject}
+            onRatingIncrease={handleRatingIncrease}
+          />
         </Modal>
 
         <ProjectControls
